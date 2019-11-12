@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: rdp-core:rdp-core:1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/rdp-core/rdp-core/1.2/rdp-core-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/rdp-core/rdp-core/1.2/rdp-core-1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/rdp-core/rdp-core/1.2/rdp-core-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

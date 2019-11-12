@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="${request.contextPath}/statics/rdp/css/preview.css" />
+    <script type="text/javascript" src="${request.contextPath}/statics/rdp/common/all/jquery-1.11.0.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/laydate/laydate.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/libs/base64Util.js"></script> 
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/popupSelection/popupSelection.js"></script>
+    <script>
+        var flag=true;//重复执行标志
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            }
+            return null;
+        }
+
+
+
+        //获取查询条件
+        function initParm(autosub) {
+        	if(flag){
+            initSearchParm('${uuid}',autosub);
+            if(autosub==0){
+            flag=false;
+            }
+            }
+        }
+
+
+        function initSearchParm(uuid,autosub) {
+            var surl = '${request.contextPath}/rdppub/showparam';
+            var loadpage = function(qa){
+            	if(!qa){return;}
+            	if(qa.css){loadStyle(Base64Util.decode64(qa.css));}
+            	if(qa.js){loadScript(Base64Util.decode64(qa.js));}
+            }
+            var sdata = {
+                    uuid: uuid
+                };
+            $.ajax({
+                url: surl,
+                cache: false,
+                data: sdata,
+                type: "post",
+                success: function (res) {
+                    //console.log(data.searchParmJson);
+                    var data= res.data;
+                	loadpage(data.queryArea);
+                    if (data.searchParmJson.length <= 0) {
+                        $("#parmlist").hide();
+                    } else {
+                        createParmHtml(data.searchParmJson);
+                        if ($("#searchlist").length==0) {
+                            $("#searchaddition").append('<div class="form-group"><input type="submit" value="查询" id="searchlist" /></div>')
+                        }
+                    }
+                    if(autosub==1){
+                    $("#btnSearch").submit();
+                    }
+                    $(".rt-parmlist").height($("#searchaddition").outerHeight(true)+$(".rt-side").outerHeight(true));
+                }
+            });
+        }
+
+        function loadScript(jsContent, callback) {
+        	var script = document.createElement("script");
+        	script.type = "text/javascript";
+        	if (typeof (jsContent) != "undefined") {
+        		if (script.readyState) {
+        			script.onreadystatechange = function() {
+        				if (script.readyState == "loaded"
+        						|| script.readyState == "complete") {
+        					script.onreadystatechange = null;
+        					callback();
+        				}
+        			};
+        		} else {
+        			script.onload = function() {
+        				callback();
+        			};
+        		}
+        	}
+        	script.appendChild(document.createTextNode("\n" + jsContent + "\n"));
+        	document.head.appendChild(script);
+        }
+
+        function loadStyle(cssString) {
+        	var style = document.createElement("style");
+        	style.setAttribute("type", "text/css");
+        	if (style.styleSheet) {// IE
+        		style.styleSheet.cssText = cssString;
+        	} else {// w3c
+        		var cssText = document.createTextNode("\n" + cssString + "\n");
+        		style.appendChild(cssText);
+        	}
+        	var heads = document.getElementsByTagName("head");
+        	if (heads.length) {
+        		heads[0].appendChild(style);
+        	} else {
+        		doc.documentElement.appendChild(style);
+        	}
+        }
+
+       function createParmHtml(jsonarr) {
+		var dataTags = [];
+		var multSelectTags = [];
+		//$("#searchaddition").empty();
+		if(flag){
+		$.each(jsonarr, function(index, node) {
+			var html = $('<div class="form-group"></div>');
+			var label = $('<label class="form-label"></label>');
+			if (node.cname) {
+				label.text(node.cname);
+			} else {
+				label.text(node.key);
+			}
+			html.append(label);
+			if ("dynamic" == node.ptype) {
+				html.hide();
+            }
+			if (node.showtype && (node.showtype == "select"||node.showtype=="multiple")) {
+				var select = $('<select name="' + node.key + '" id="' + node.key +
+					'" class="form-select"></select>');
+				if (!node.keylist || node.keylist.indexOf(":") == -1) {
+					select.append("<option value=''></option>");
+					select.append("<option value='" + node.value + "'>" + node.value + "</option>");
+				} else {
+					if (node.keylist.indexOf(",") != -1) {
+						var keys = node.keylist.split(",");
+						select.append("<option value=''></option>");
+						for (var i = 0; i < keys.length; i++) {
+							select.append("<option value='" + keys[i].split(":")[1] + "'>" + keys[i].split(
+									":")[0] + "</option>");
+						}
+					} else {
+						select.append("<option value='" + keylist.split(":")[1] + "'>" + keylist.split(":")[
+								0] + "</option>");
+					}
+				}
+				html.append(select);
+                if (node.showtype=="multiple") {
+                    multSelectTags.push(node);
+                }
+			} else if (node.showtype && (node.showtype == "date" || node.showtype == "year" || node.showtype == "month" || node.showtype == "time" || node.showtype == "datetime")) {
+				var input = $('<input name="' + node.key + '" id="' + node.key + '" value="' + node.value +
+					'" class="form-input" type="text" autocomplete="off"/>');
+				html.append(input);
+				dataTags.push(node);
+
+			} else {
+				var input = $('<input name="' + node.key + '" id="' + node.key.replace('@','') + '" value="' + node.value +
+					'" class="form-input" type="text"/>');
+				html.append(input);
+			}
+			if($('#'+node.key.replace('@','')).attr('type')!='hidden'){
+			html.appendTo($("#searchaddition"));
+			}
+		});
+		}else{
+		$.each(jsonarr, function(index, node) {
+		if (node.showtype && (node.showtype == "select"||node.showtype=="multiple")) {
+			if($('#'+node.key)){
+			$('#'+node.key).empty();
+				var select = '';
+				if (!node.keylist || node.keylist.indexOf(":") == -1) {
+					select+="<option value=''></option>";
+					select+="<option value='" + node.value + "'>" + node.value + "</option>";
+				} else {
+					if (node.keylist.indexOf(",") != -1) {
+						var keys = node.keylist.split(",");
+						select+="<option value=''></option>";
+						for (var i = 0; i < keys.length; i++) {
+							select+="<option value='" + keys[i].split(":")[1] + "'>" + keys[i].split(
+									":")[0] + "</option>";
+						}
+					} else {
+						select+="<option value='" + node.keylist.split(":")[1] + "'>" + node.keylist.split(":")[
+								0] + "</option>";
+					}
+				}
+				$('#'+node.key).append(select);
+                // if (node.showtype=="multiple") {
+                //     multSelectTags.push(node);
+                // }
+                }
+			}
+		});
+		}
+		for (var i = 0; i < dataTags.length; i++) {
+			var format = dataTags[i].format ? dataTags[i].format : "yyyy-MM-dd";
+			console.log(format);
+			laydate.render({
+				elem : '#' + dataTags[i].key,
+				format : format,
+				type : dataTags[i].showtype
+			});
+		}
+		for (var i = 0; i < multSelectTags.length; i++) {
+            $('#'+multSelectTags[i].key).popupSelection({
+					searchOn: true, //启用搜索
+					inline: true, //弹出层
+					multiple: true, //多选
+					title:multSelectTags[i].cname,
+					cellCount: 4, //每行选项个数
+					labelShow:true //是否在选择区域显示label标签
+				});
+		}
+	}
+		var actionurl='${request.contextPath}/rdppage/show/${uuid}';
+        $(function () {
+            $('#btnSearch').attr('action',actionurl);
+            initParm(1);
+            $(".rt-swicth").bind("click", function () {
+                if ($(".rt-parmlist").hasClass("on")) {
+                    $(".rt-parmlist").removeClass("on").css("margin-top", -$(".rt-parmlist").height());
+                    $("body").css("overflow","hidden");
+                } else {
+                    $(".rt-parmlist").addClass("on").css("margin-top", 0);
+                    $("body").css("overflow","auto");
+                }
+            });
+            $("body").css("overflow","auto");
+        })
+    </script>
+</head>
+
+<body>
+    <div class="rt-parmlist rt-top on" id="parmlist">
+        <div class="rt-side">
+            <i class="rt-swicth"></i>
+        </div>
+        <!--数据请求表单开始 -->
+        <form id="btnSearch" action="" method="post" target="ifmreport">
+            <div id="searchaddition">
+                <!-- post参数放这里 -->
+                <#list hideitems as item>
+                    <input type="hidden" name="${item.name}" id="${item.name}" value="${item.value}">
+                </#list>
+            </div>
+        </form>
+        <!--数据请求表单结束 -->
+    </div>
+    <table class="rt-view" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <td valign="top" height="100%">
+                    <div style="width:100%;height:100%;z-index:-1;">
+                        <iframe id="ifmreport" name="ifmreport" src="about:blank" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

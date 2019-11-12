@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="RDP-SERVER:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="RDP-SERVER.war">
+      <element id="artifact" artifact-name="RDP-SERVER:war exploded" />
+    </root>
+  </artifact>
+</component>

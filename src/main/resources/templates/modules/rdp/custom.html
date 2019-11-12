@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="${request.contextPath}/statics/rdp/css/preview.css" />
+    <link rel="stylesheet" href="${request.contextPath}/statics/plugins/ztree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${request.contextPath}/statics/rdp/common/css/iconfont/css/iconfont.css" />
+    <link rel="stylesheet" href="${request.contextPath}/statics/rdp/css/custom.css" />
+    <link rel="stylesheet" href="${request.contextPath}/statics/rdp/common/lib/layer/theme/default/layer.css" />
+    <script type="text/javascript" src="${request.contextPath}/statics/rdp/common/all/jquery-1.11.0.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/rdp/common/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/laydate/laydate.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/popupSelection/popupSelection.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/statics/libs/base64Util.js"></script> 
+    <script type="text/javascript" src="${request.contextPath}/statics/rdp/js/parm.js"></script>
+    <script> var contextPath = '${request.contextPath}',uuid = '${uuid}'; </script>
+</head>
+<body>
+    <div class="rt-parmlist rt-top on" id="parmlist">
+        <div class="rt-side">
+            <i class="rt-swicth"></i>
+        </div>
+        <!--数据请求表单开始 -->
+        <form id="btnSearch" action="" method="post" target="ifmreport">
+            <div id="searchaddition">
+                <!-- post参数放这里 -->
+                <#list hideitems as item>
+                    <input type="hidden" name="${item.name}" id="${item.name}" value="${item.value}">
+                </#list>
+            </div>
+        </form>
+        <!--数据请求表单结束 -->
+    </div>
+    <table class="rt-view" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <td valign="top" height="100%">
+                    <div style="width:100%;height:100%;z-index:-1;">
+                        <iframe id="ifmreport" name="ifmreport" src="about:blank" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

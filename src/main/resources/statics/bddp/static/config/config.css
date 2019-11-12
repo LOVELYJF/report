@@ -1,0 +1,125 @@
+html, body {
+    height: 100%;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+button {
+    border: none;
+    outline: 0;
+    background-color: #333;
+    color: #ffffff;
+    width: 100%;
+    padding: 5px;
+}
+
+.left {
+    height: 570px;
+    display: block;
+    width: 120px;
+    float: left;
+    border-right: 1px solid #dddddd;
+}
+
+.center {
+    height: 570px;
+    display: block;
+    width: 225px;
+    float: left;
+    overflow: auto;
+    position: relative;
+    border-right: 1px solid #dddddd;
+}
+
+.right {
+    height: 540px;
+    display: block;
+    width: 120px;
+    float: left;
+    overflow: auto;
+    border-right: 1px solid #dddddd;
+}
+
+.itemform {
+    height: 570px;
+    display: none;
+    width: 220px;
+    border-right: 1px solid #ddd;
+    float: left;
+    overflow: auto;
+    position: relative;
+}
+
+.tag-items {
+    width: 100%;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.tag-items:hover, .tag-items.on {
+    background-color: #585956;
+    color: #ffffff;
+}
+
+#accordion {
+}
+
+#saveBtn {
+    /* position: absolute; */
+    width: 100%;
+    bottom: 10px;
+}
+
+#saveItemBtn {
+    position: absolute;
+    bottom: 10px;
+}
+
+.ui-state-active {
+    background-color: #585956;
+    border: none;
+}
+
+.ui-accordion .ui-accordion-header {
+    padding: 0px 0px 0px 10px;
+    border: none;
+    outline: 0;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding: 0px;
+    border: none;
+}
+
+.item-tag {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.item-tag:hover {
+    background-color: #585956;
+    color: #ffffff;
+}
+
+.item-tag.on {
+    background-color: #585956;
+    color: #ffffff;
+}
+
+.input-group {
+    margin-top: 10px;
+    padding-left: 5px;
+}
+
+.input-group label {
+    width: 60px;
+    display: inline-block;
+}
+
+.input-group select {
+    width: 140px;
+}
+
+.input-group input {
+    width: 140px;
+}
